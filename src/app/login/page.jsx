@@ -1,5 +1,6 @@
 "use client"
 import { signIn } from "next-auth/react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -22,7 +23,10 @@ export default function LoginPage() {
     email,password
     })
     if(result?.error){
-      setError("Email or Password Error")
+      setError(result.error);
+      setTimeout(() => {
+        setError(""); 
+      }, 3000);
     }
     else{
       router.push('/')
@@ -70,6 +74,10 @@ export default function LoginPage() {
             Login
           </button>
         </form>
+        <div>
+          <p className="text-center py-2">Are you new? <Link className="font-bold" href='/register'>
+          Register Now</Link></p>
+        </div>
       </div>
     </div>
   );

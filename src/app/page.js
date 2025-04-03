@@ -21,6 +21,6 @@ export default function Dashboard() {
       className="bg-red-600 my-5 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300"
     >
       Log Out
-    </button>    </div>
+    </button></div>
   );
 }
