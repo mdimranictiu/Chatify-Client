@@ -67,7 +67,7 @@ export default function LoginPage() {
           {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
 
           <div>
-            <a href="#" className="text-blue-500 hover:underline text-sm">Forgot password?</a>
+            <Link href="/reset-password" className="text-blue-500 hover:underline text-sm">Forgot password?</Link>
           </div>
 
           <button type="submit" className="btn bg-[#7169EF] text-white rounded-lg p-2 hover:bg-[#5b53e0] transition">
