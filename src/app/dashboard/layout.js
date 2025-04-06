@@ -1,7 +1,14 @@
 // app/dashboard/layout.js
+"use client"
+import { signOut } from 'next-auth/react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function DashboardLayout({ children }) {
+  const rotuer=useRouter()
+  const handleLogOut=()=>{
+
+  }
   return (
     <div className="flex min-h-screen bg-gray-50">
       {/* Sidebar */}
@@ -34,7 +41,7 @@ export default function DashboardLayout({ children }) {
 
           {/* LogOut Button */}
           <div>
-            <button className="w-full py-2 mt-6 text-lg text-white bg-red-500 hover:bg-red-600 rounded-md focus:outline-none transition duration-300">
+            <button onClick={handleLogOut} className="w-full py-2 mt-6 text-lg text-white bg-red-500 hover:bg-red-600 rounded-md focus:outline-none transition duration-300">
               Log Out
             </button>
           </div>

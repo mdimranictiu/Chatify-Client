@@ -35,7 +35,7 @@ export default function ProfilePage() {
     };
     fetchUser();
   }, [userEmail, refetch]);
-
+console.log(user)
   const handleEditButton = () => {
     setisEdit(!isEdit);
   };
