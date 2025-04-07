@@ -1,13 +1,41 @@
-import React from 'react'
+"use client"
+import axios from 'axios';
+import { useSession } from 'next-auth/react';
+import Image from 'next/image';
+import React, { useEffect, useState } from 'react'
 import { IoIosSend } from "react-icons/io";
 
 export default function page() {
+  const [user,setUser]=useState(null)
+  const { data: session, status } = useSession();
+  const userEmail = session?.user?.email;
+  useEffect(()=>{
+    const UserFecth=async()=>{
+    try {
+      const response= await axios.post('http://localhost:5000/auth/find/Profile/',{email:userEmail})
+if(response.data){
+  setUser(response.data)
+}
+    }
+    catch (error) {
+      console.log(error)
+    }}
+    UserFecth();
+  },[userEmail])
+  console.log(user)
   return (
     <div className='relative'>
       <div className='border-b-2 py-2 w-full  text-gray-400 mx-auto'>
         <div className='flex flex-row gap-2 items-center'>
-          <div className='w-12 h-12 rounded-full bg-gray-500 '></div>
-          <h2>User name</h2>
+          <div className='w-12 h-12 rounded-full bg-gray-500 '>
+                     <Image
+              src={user?.profilePicture } // fallback image if not found
+              alt={user?.name || 'User'}
+              width={50} height={50}
+              className="rounded-full object-cover"
+            />
+          </div>
+          <h2>{user?.name}</h2>
         </div>
       </div>
       <div className='h-110 overflow-y-auto' style={{ scrollbarWidth: 'none', }}>

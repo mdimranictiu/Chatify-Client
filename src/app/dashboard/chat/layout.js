@@ -1,8 +1,53 @@
 // app/dashboard/layout.js
+"use client"
+import axios from 'axios';
+import { useSession } from 'next-auth/react';
+import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { IoIosSearch } from "react-icons/io";
 
 export default function chatLayout({ children }) {
+  const { data: session, status } = useSession();
+  const [onlineUsers,setOnlineUsers]=useState()
+  const [recentContacts,setrecentContacts]=useState()
+  const userEmail = session?.user?.email;
+  const router=useRouter()
+  console.log(userEmail)
+  useEffect(()=>{
+    const fetchOnlineUsers=async()=>{
+      try {
+        const response= await axios.post('http://localhost:5000/api/find/onlineUsers',{email: userEmail})
+      if(response.data){
+        setOnlineUsers(response?.data)
+      }
+      } catch (error) {
+        console.log(error)
+      }
+     
+    }
+    fetchOnlineUsers()
+  },[userEmail])
+  useEffect(()=>{
+    const fetchrecentContacts=async()=>{
+      try {
+        const response= await axios.post('http://localhost:5000/api/find/recent/contacts',{email: userEmail})
+      if(response.data){
+        setrecentContacts(response?.data)
+      }
+      } catch (error) {
+        console.log(error)
+      }
+     
+    }
+    fetchrecentContacts()
+  },[userEmail])
+  console.log(recentContacts)
+  //handleChatPage
+  const handleChatPage=(id)=>{
+    router.push(`/dashboard/chat/${id}`);
+  }
   return (
     <div className="flex min-h-screen">
       {/* Sidebar */}
@@ -17,163 +62,65 @@ export default function chatLayout({ children }) {
     className="w-full pl-10 pr-4 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:border-blue-500 transition duration-200"
   />
 </div>
-<div
-  className="py-10 overflow-x-auto flex gap-2"
-  style={{
-    scrollbarWidth: 'none',     // Firefox
-    msOverflowStyle: 'none',    // IE 10+
-    display: 'flex',
-    flexDirection: 'row',
-  }}
->
-  <style>
-    {`
-      div::-webkit-scrollbar {
-        display: none;
-      }
-    `}
-  </style>
-
-  {/* Repeatable Item */}
-  {[...Array(10)].map((_, i) => (
+<div className="py-6 px-2 overflow-x-auto flex gap-3 no-scrollbar">
+  {onlineUsers?.map((user, index) => (
     <div
-      key={i}
-      className="w-16 h-16 rounded-sm relative items-center bg-gray-300 shrink-0"
+      key={index}
+      className="w-20 flex-shrink-0 flex flex-col items-center relative bg-white hover:bg-[#f1f5fb] rounded-lg shadow-sm transition-all duration-300 p-2"
     >
-      <div className="w-11 h-11 mx-auto absolute transform -translate-y-4 translate-x-2 bg-red-400 rounded-full" />
-      <h6 className="absolute mt-8 px-2 font-semibold text-green-500 text-center">
+      <div className="w-12 h-12 relative">
+        <Image
+          src={user?.profilePicture || '/default-avatar.png'}
+          alt={user?.username || 'User'}
+          width={48}
+          height={48}
+          className="rounded-full object-cover w-full h-full"
+        />
+        <div className="w-3 h-3 bg-green-500 rounded-full ring-2 ring-white absolute bottom-0 right-0"></div>
+      </div>
+      <p className="mt-2 text-[11px] text-green-600 font-medium text-center">
         Online
-      </h6>
+      </p>
     </div>
   ))}
 </div>
+
 
 <div>
   <h2 className='text-xl font-bold py-2'>Recent</h2>
   {/* Contacts recent */}
   <div className='overflow-y-auto h-84 flex flex-col gap-1 ' style={{ scrollbarWidth: 'none', }}>
     {/*  */}
-  <div className='bg-white duration-300 transition rounded-sm hover:bg-[#E6EBF5] flex items-center justify-between p-2'>
-     <div className='flex flex-row gap-3 items-center'>
-     <div className='w-12 h-12 relative bg-red-500 rounded-full'>
-      <div className='w-2 h-2 absolute transform translate-x-10 translate-y-8 bg-green-400 rounded-full'></div>
-     </div>
-     <div className='flex flex-col '>
-      <h2>User Name</h2>
-      <p>I am Avaible Now</p>
-     </div>
-     </div>
-     <p>5 mins ago</p>
+    {recentContacts?.map((recentContact, index) => (
+  <div
+    key={index} onClick={()=>handleChatPage(recentContact?.id)}
+    className="bg-white hover:bg-[#f1f5fb] transition duration-300 rounded-lg shadow-sm hover:shadow-lg flex items-center justify-between p-4 mb-2"
+  >
+    <div className="flex items-center gap-4">
+      <div className="relative w-12 h-12">
+        <Image
+          src={recentContact?.profilePicture || "/default-avatar.png"}
+          alt={recentContact?.username || "User"}
+          width={48}
+          height={48}
+          className="rounded-full object-cover w-full h-full"
+        />
+        <div className={`w-3 h-3 ${recentContact?.isOnline? "bg-green-400":"bg-red-400"}  rounded-full absolute bottom-0 right-0 ring-2 ring-white`} />
+      </div>
+
+      <div className="flex flex-col">
+        <h2 className="text-sm font-semibold text-gray-800">
+          {recentContact?.name || "Unknown"}
+        </h2>
+        <p className="text-xs text-gray-500">{recentContact?.isOnline ? "I am available right now":"Offline now, leave a message!"}</p>
+      </div>
     </div>
-    {/*  */}
-  <div className='bg-white duration-300 transition rounded-sm hover:bg-[#E6EBF5] flex items-center justify-between p-2'>
-     <div className='flex flex-row gap-3 items-center'>
-     <div className='w-12 h-12 relative bg-red-500 rounded-full'>
-      <div className='w-2 h-2 absolute transform translate-x-10 translate-y-8 bg-green-400 rounded-full'></div>
-     </div>
-     <div className='flex flex-col '>
-      <h2>User Name</h2>
-      <p>I am Avaible Now</p>
-     </div>
-     </div>
-     <p>5 mins ago</p>
-    </div>
-  <div className='bg-white duration-300 transition rounded-sm hover:bg-[#E6EBF5] flex items-center justify-between p-2'>
-     <div className='flex flex-row gap-3 items-center'>
-     <div className='w-12 h-12 relative bg-red-500 rounded-full'>
-      <div className='w-2 h-2 absolute transform translate-x-10 translate-y-8 bg-green-400 rounded-full'></div>
-     </div>
-     <div className='flex flex-col '>
-      <h2>User Name</h2>
-      <p>I am Avaible Now</p>
-     </div>
-     </div>
-     <p>5 mins ago</p>
-    </div>
-  <div className='bg-white duration-300 transition rounded-sm hover:bg-[#E6EBF5] flex items-center justify-between p-2'>
-     <div className='flex flex-row gap-3 items-center'>
-     <div className='w-12 h-12 relative bg-red-500 rounded-full'>
-      <div className='w-2 h-2 absolute transform translate-x-10 translate-y-8 bg-green-400 rounded-full'></div>
-     </div>
-     <div className='flex flex-col '>
-      <h2>User Name</h2>
-      <p>I am Avaible Now</p>
-     </div>
-     </div>
-     <p>5 mins ago</p>
-    </div>
-  <div className='bg-white duration-300 transition rounded-sm hover:bg-[#E6EBF5] flex items-center justify-between p-2'>
-     <div className='flex flex-row gap-3 items-center'>
-     <div className='w-12 h-12 relative bg-red-500 rounded-full'>
-      <div className='w-2 h-2 absolute transform translate-x-10 translate-y-8 bg-green-400 rounded-full'></div>
-     </div>
-     <div className='flex flex-col '>
-      <h2>User Name</h2>
-      <p>I am Avaible Now</p>
-     </div>
-     </div>
-     <p>5 mins ago</p>
-    </div>
-  <div className='bg-white duration-300 transition rounded-sm hover:bg-[#E6EBF5] flex items-center justify-between p-2'>
-     <div className='flex flex-row gap-3 items-center'>
-     <div className='w-12 h-12 relative bg-red-500 rounded-full'>
-      <div className='w-2 h-2 absolute transform translate-x-10 translate-y-8 bg-green-400 rounded-full'></div>
-     </div>
-     <div className='flex flex-col '>
-      <h2>User Name</h2>
-      <p>I am Avaible Now</p>
-     </div>
-     </div>
-     <p>5 mins ago</p>
-    </div>
-  <div className='bg-white duration-300 transition rounded-sm hover:bg-[#E6EBF5] flex items-center justify-between p-2'>
-     <div className='flex flex-row gap-3 items-center'>
-     <div className='w-12 h-12 relative bg-red-500 rounded-full'>
-      <div className='w-2 h-2 absolute transform translate-x-10 translate-y-8 bg-green-400 rounded-full'></div>
-     </div>
-     <div className='flex flex-col '>
-      <h2>User Name</h2>
-      <p>I am Avaible Now</p>
-     </div>
-     </div>
-     <p>5 mins ago</p>
-    </div>
-  <div className='bg-white duration-300 transition rounded-sm hover:bg-[#E6EBF5] flex items-center justify-between p-2'>
-     <div className='flex flex-row gap-3 items-center'>
-     <div className='w-12 h-12 relative bg-red-500 rounded-full'>
-      <div className='w-2 h-2 absolute transform translate-x-10 translate-y-8 bg-green-400 rounded-full'></div>
-     </div>
-     <div className='flex flex-col '>
-      <h2>User Name</h2>
-      <p>I am Avaible Now</p>
-     </div>
-     </div>
-     <p>5 mins ago</p>
-    </div>
-  <div className='bg-white duration-300 transition rounded-sm hover:bg-[#E6EBF5] flex items-center justify-between p-2'>
-     <div className='flex flex-row gap-3 items-center'>
-     <div className='w-12 h-12 relative bg-red-500 rounded-full'>
-      <div className='w-2 h-2 absolute transform translate-x-10 translate-y-8 bg-green-400 rounded-full'></div>
-     </div>
-     <div className='flex flex-col '>
-      <h2>User Name</h2>
-      <p>I am Avaible Now</p>
-     </div>
-     </div>
-     <p>5 mins ago</p>
-    </div>
-  <div className='bg-white duration-300 transition rounded-sm hover:bg-[#E6EBF5] flex items-center justify-between p-2'>
-     <div className='flex flex-row gap-3 items-center'>
-     <div className='w-12 h-12 relative bg-red-500 rounded-full'>
-      <div className='w-2 h-2 absolute transform translate-x-10 translate-y-8 bg-green-400 rounded-full'></div>
-     </div>
-     <div className='flex flex-col '>
-      <h2>User Name</h2>
-      <p>I am Avaible Now</p>
-     </div>
-     </div>
-     <p>5 mins ago</p>
-    </div>
+
+    <p className="text-xs text-gray-400">5 mins ago</p>
+  </div>
+))}
+
+
   </div>
 
 </div>
