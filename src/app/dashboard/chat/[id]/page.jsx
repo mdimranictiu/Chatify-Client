@@ -79,7 +79,6 @@ if(response?.data){
           });
           if (response?.data) {
             setMessages(response.data);
-            console.log("Fetched Messages:", response.data);
           } else {
             console.log("No messages found");
           }
@@ -92,7 +91,6 @@ if(response?.data){
     }
   }, [user?._id, receiver?._id,fetch]);
   
-  console.log("message",messages)
   //local date converter
   const ConvertLocalDate=(time)=>{
     const date= new Date(time)
@@ -178,7 +176,7 @@ if(response?.data){
       <div ref={messagesEndRef} ></div>
       </div>
       
-<div className='border transform translate-y-20 absolute w-[80%]  p-5 rounded-sm mx-[10%] border-gray-400'>
+<div className='border my-2 absolute w-[80%]  p-5 rounded-sm mx-[10%] border-gray-400'>
 <form onSubmit={handleSendMessage}>
 <div className='flex  justify-between gap-5 items-center'>
   <input type="text" placeholder='Write Message' value={message}

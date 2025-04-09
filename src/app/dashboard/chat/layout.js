@@ -12,6 +12,9 @@ export default function chatLayout({ children }) {
   const { data: session, status } = useSession();
   const [onlineUsers,setOnlineUsers]=useState()
   const [recentContacts,setrecentContacts]=useState()
+  const [recent,setRecent]=useState()
+  const [user,setUser]=useState()
+  const [search,SetSearch]=useState("")
   const userEmail = session?.user?.email;
   const router=useRouter()
   console.log(userEmail)
@@ -29,25 +32,59 @@ export default function chatLayout({ children }) {
     }
     fetchOnlineUsers()
   },[userEmail])
-  useEffect(()=>{
-    const fetchrecentContacts=async()=>{
-      try {
-        const response= await axios.post('http://localhost:5000/api/find/recent/contacts',{email: userEmail})
-      if(response.data){
-        setrecentContacts(response?.data)
-      }
-      } catch (error) {
-        console.log(error)
-      }
+  // useEffect(()=>{
+  //   const fetchrecentContacts=async()=>{
+  //     try {
+  //       const response= await axios.post('http://localhost:5000/api/find/recent/contacts',{email: userEmail})
+  //     if(response.data){
+  //       setrecentContacts(response?.data)
+  //     }
+  //     } catch (error) {
+  //       console.log(error)
+  //     }
      
+  //   }
+  //   fetchrecentContacts()
+  // },[userEmail])
+  useEffect(()=>{
+    const UserFecth=async()=>{
+    try {
+      const response= await axios.post('http://localhost:5000/auth/find/Profile/',{email:userEmail})
+if(response?.data){
+  setUser(response?.data)
+}
     }
-    fetchrecentContacts()
+    catch (error) {
+      console.log(error)
+    }}
+    UserFecth();
   },[userEmail])
+  useEffect(() => {
+    const fetchRecent = async () => {
+      try {
+        const response = await axios.post(
+          `http://localhost:5000/api/find/recent?search=${search}`,
+          { userId: user?._id }
+        );
+        if (response.data) {
+          setrecentContacts(response.data);
+        }
+      } catch (error) {
+        console.log("Fetch error:", error);
+      }
+    };
+  
+    if (user?._id) {
+      fetchRecent();
+    }
+  }, [user?._id, search]);
+  
   console.log(recentContacts)
   //handleChatPage
   const handleChatPage=(id)=>{
     router.push(`/dashboard/chat/${id}`);
   }
+  console.log(search)
   return (
     <div className="flex min-h-screen">
       {/* Sidebar */}
@@ -58,7 +95,7 @@ export default function chatLayout({ children }) {
   <IoIosSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-xl" />
   <input
     type="text"
-    placeholder="Search users"
+    placeholder="Search users" onChange={(e)=>SetSearch(e.target.value)}
     className="w-full pl-10 pr-4 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:border-blue-500 transition duration-200"
   />
 </div>
@@ -89,11 +126,11 @@ export default function chatLayout({ children }) {
 <div>
   <h2 className='text-xl font-bold py-2'>Recent</h2>
   {/* Contacts recent */}
-  <div className='overflow-y-auto h-84 flex flex-col gap-1 ' style={{ scrollbarWidth: 'none', }}>
+  <div className='overflow-y-auto min-h-3/4 flex flex-col gap-1 ' style={{ scrollbarWidth: 'none', }}>
     {/*  */}
     {recentContacts?.map((recentContact, index) => (
   <div
-    key={index} onClick={()=>handleChatPage(recentContact?.id)}
+    key={index} onClick={()=>handleChatPage(recentContact?._id)}
     className="bg-white hover:bg-[#f1f5fb] transition duration-300 rounded-lg shadow-sm hover:shadow-lg flex items-center justify-between p-4 mb-2"
   >
     <div className="flex items-center gap-4">

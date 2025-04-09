@@ -1,145 +1,37 @@
-"use client"
-import axios from 'axios';
-import { useSession } from 'next-auth/react';
-import Image from 'next/image';
-import React, { useEffect, useState } from 'react'
-import { IoIosSend } from "react-icons/io";
+import Link from 'next/link';
+import React from 'react';
 
-export default function page() {
-  const [user,setUser]=useState(null)
-  const { data: session, status } = useSession();
-  const userEmail = session?.user?.email;
-  useEffect(()=>{
-    const UserFecth=async()=>{
-    try {
-      const response= await axios.post('http://localhost:5000/auth/find/Profile/',{email:userEmail})
-if(response.data){
-  setUser(response.data)
-}
-    }
-    catch (error) {
-      console.log(error)
-    }}
-    UserFecth();
-  },[userEmail])
-  console.log(user)
+export default function Page() {
   return (
-    <div className='relative'>
-      <div className='border-b-2 py-2 w-full  text-gray-400 mx-auto'>
-        <div className='flex flex-row gap-2 items-center'>
-          <div className='w-12 h-12 rounded-full bg-gray-500 '>
-                     <Image
-              src={user?.profilePicture } // fallback image if not found
-              alt={user?.name || 'User'}
-              width={50} height={50}
-              className="rounded-full object-cover"
-            />
-          </div>
-          <h2>{user?.name}</h2>
-        </div>
-      </div>
-      <div className='h-110 overflow-y-auto' style={{ scrollbarWidth: 'none', }}>
-      <div className="chat chat-start">
-  <div className="chat-image avatar">
-    <div className="w-10 rounded-full">
-      <img
-        alt="Tailwind CSS chat bubble component"
-        src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
-    </div>
-  </div>
-  <div className="chat-header">
-    Obi-Wan Kenobi
-    <time className="text-xs opacity-50">12:45</time>
-  </div>
-  <div className="chat-bubble">You were the Chosen One!</div>
-  <div className="chat-footer opacity-50">Delivered</div>
-</div>
-<div className="chat chat-end">
-  <div className="chat-image avatar">
-    <div className="w-10 rounded-full">
-      <img
-        alt="Tailwind CSS chat bubble component"
-        src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
-    </div>
-  </div>
-  <div className="chat-header">
-    Anakin
-    <time className="text-xs opacity-50">12:46</time>
-  </div>
-  <div className="chat-bubble">I hate you!</div>
-  <div className="chat-footer opacity-50">Seen at 12:46</div>
-</div>
-<div className="chat chat-end">
-  <div className="chat-image avatar">
-    <div className="w-10 rounded-full">
-      <img
-        alt="Tailwind CSS chat bubble component"
-        src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
-    </div>
-  </div>
-  <div className="chat-header">
-    Anakin
-    <time className="text-xs opacity-50">12:46</time>
-  </div>
-  <div className="chat-bubble">I hate you!</div>
-  <div className="chat-footer opacity-50">Seen at 12:46</div>
-</div>
-<div className="chat chat-start">
-  <div className="chat-image avatar">
-    <div className="w-10 rounded-full">
-      <img
-        alt="Tailwind CSS chat bubble component"
-        src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
-    </div>
-  </div>
-  <div className="chat-header">
-    Obi-Wan Kenobi
-    <time className="text-xs opacity-50">12:45</time>
-  </div>
-  <div className="chat-bubble">You were the Chosen One!</div>
-  <div className="chat-footer opacity-50">Delivered</div>
-</div>
-<div className="chat chat-end">
-  <div className="chat-image avatar">
-    <div className="w-10 rounded-full">
-      <img
-        alt="Tailwind CSS chat bubble component"
-        src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
-    </div>
-  </div>
-  <div className="chat-header">
-    Anakin
-    <time className="text-xs opacity-50">12:46</time>
-  </div>
-  <div className="chat-bubble">I hate you!</div>
-  <div className="chat-footer opacity-50">Seen at 12:46</div>
-</div>
-<div className="chat chat-end">
-  <div className="chat-image avatar">
-    <div className="w-10 rounded-full">
-      <img
-        alt="Tailwind CSS chat bubble component"
-        src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
-    </div>
-  </div>
-  <div className="chat-header">
-    Anakin
-    <time className="text-xs opacity-50">12:46</time>
-  </div>
-  <div className="chat-bubble">I hate you!</div>
-  <div className="chat-footer opacity-50">Seen at 12:46</div>
-</div>
-      </div>
-      
-<div className='border transform translate-y-5 absolute w-[80%]  p-5 rounded-sm mx-[10%] border-gray-400'>
-<div className='flex  justify-between gap-5 items-center'>
-  <input type="text" placeholder='Write Message' className='bg-[#E6EBF5] outline-none px-5 w-full h-16' name="" id="" />
-  <div>
-  <IoIosSend className='text-3xl text-[#7169EF]' title='send message'/>
+    <div style={{ position: 'relative', minHeight: '100vh' }}>
+      {/* Watermark */}
+      <div
+        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+        style={{
+          zIndex: 0,
+          color: '[#6464DD]',
+          fontSize: '2rem',
+          fontWeight: 'bold',
+          opacity: 0.1,
+          pointerEvents: 'none',
+        }}
+      >
+     <div className="flex flex-col items-center justify-center space-y-4 relative z-10">
+        <h2 className="text-7xl font-bold">Chatify</h2>
+        <p className="text-lg text-center">A Real-Time Chat Application</p>
+        <Link style={{ pointerEvents: 'visible',}}
+          href="https://www.linkedin.com/in/md-imran-sheikh-bd/"
+          target="_blank"
+          className=" transition"
+        >
+          By MD IMRAN SHEIKH
+        </Link>
 
-  </div>
-</div>
-</div>
+      </div>
+      </div>
+
+      {/* Main Content */}
+    
     </div>
-  )
+  );
 }
