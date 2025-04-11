@@ -14,30 +14,50 @@ export const authOptions = {
         const { email, password } = credentials;
 
         try {
+          // Step 1: Authenticate user
           const response = await axios.post("http://localhost:5000/api/auth/user", {
-           email ,password
+            email,
+            password,
           });
 
           const user = response?.data;
-          console.log(response.message)
 
           if (user) {
-            return user; 
-          }
-        } catch (error) {
-          if (error.response && error.response.data) {
-            throw new Error(error.response.data.message);
-          } else {
-            throw new Error("An unexpected error occurred");
-          }
-        }
+            // Step 2: Generate JWT
+            const jwtRes = await axios.post("http://localhost:5000/api/jwt", {
+              email: user?.email,
+            });
 
-        return null; 
+            const token = jwtRes?.data?.token;
+
+            // Add token to user object (for session use)
+            return { ...user, token };
+          }
+
+          return null;
+        } catch (error) {
+          console.error(error);
+          throw new Error(
+            error?.response?.data?.message || "An unexpected error occurred"
+          );
+        }
       },
     }),
   ],
   pages: {
     signIn: "/login",
+  },
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user?.token) {
+        token.accessToken = user.token;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      session.accessToken = token.accessToken;
+      return session;
+    },
   },
 };
 

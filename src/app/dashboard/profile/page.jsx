@@ -1,4 +1,5 @@
-"use client"
+"use client";
+import UseAxiosSecure from "@/app/hooks/useAxiosSecure";
 import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 import { FiEdit } from "react-icons/fi";
@@ -9,23 +10,23 @@ export default function ProfilePage() {
   const [isEdit, setisEdit] = useState(false);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [save, setSave] = useState(false); 
+  const [save, setSave] = useState(false);
   const [refetch, setRefetch] = useState(false);
-
+  const axiosSecure = UseAxiosSecure();
+  useEffect(() => {
+    document.title = "Profile || Chatify";
+  }, []);
   useEffect(() => {
     const fetchUser = async () => {
       if (userEmail) {
         try {
           setLoading(true);
-          const response = await fetch('http://localhost:5000/auth/find/Profile/', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email: userEmail }),
+          const response = await axiosSecure.post("/auth/find/Profile", {
+            email: userEmail,
           });
-          const data = await response.json();
-          setUser(data);
+          if (response?.data) {
+            setUser(response?.data);
+          }
         } catch (error) {
           console.error(error);
         } finally {
@@ -35,7 +36,7 @@ export default function ProfilePage() {
     };
     fetchUser();
   }, [userEmail, refetch]);
-console.log(user)
+
   const handleEditButton = () => {
     setisEdit(!isEdit);
   };
@@ -58,12 +59,11 @@ console.log(user)
       }
 
       const res = await fetch("http://localhost:5000/auth/update/profile", {
-        method: 'PATCH',
+        method: "PATCH",
         body: formData,
       });
 
       const result = await res.json();
-      console.log("Updated:", result);
       if (result) {
         setSave(false);
         setisEdit(false);
@@ -77,32 +77,34 @@ console.log(user)
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        <div className="border-4 border-[#6464DD] border-dashed rounded-full w-16 h-16 animate-spin"></div>
+        <progress className="progress w-56"></progress>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col py-10 min-h-screen items-center bg-gray-100">
+    <div className="flex flex-col py-10 min-h-screen items-center bg-[#E6EBF5]">
       <div className="flex flex-col items-center gap-2">
-        <h3 className="text-2xl font-semibold">My Profile</h3>
+        <h3 className="text-xl font-semibold">My Profile</h3>
       </div>
 
       <div className="bg-white my-5 shadow-2xl flex flex-col items-center rounded-lg w-full max-w-[580px] p-10">
         <div className="w-[150px] h-[150px] border-2 rounded-full bg-gray-300 overflow-hidden">
           <img
-            src={user?.profilePicture || "/default-profile.png"}
+            src={user?.profilePicture}
             alt="Profile"
             className="object-cover w-full h-full"
           />
         </div>
 
         <div className="py-10 w-full">
-          <div className="flex items-center gap-5 text-xl font-bold mb-5">
-            <h2 className="">Personal Information</h2>
-            {!isEdit && (<button onClick={handleEditButton}>
-              <FiEdit title="Edit Personal Information" />
-            </button>)}
+          <div className="flex items-center gap-5 text-xl  mb-5">
+            <h2 className="text-xl">Personal Information</h2>
+            {!isEdit && (
+              <button onClick={handleEditButton}>
+                <FiEdit title="Edit Personal Information" />
+              </button>
+            )}
           </div>
 
           {!isEdit ? (
@@ -144,7 +146,8 @@ console.log(user)
                 </label>
                 <input
                   type="text"
-                  name="name" defaultValue={user?.name}
+                  name="name"
+                  defaultValue={user?.name}
                   className="mt-1 p-2 w-full rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#6464DD]"
                 />
               </div>
@@ -168,7 +171,8 @@ console.log(user)
                 </label>
                 <textarea
                   name="bio"
-                  rows="4" defaultValue={user?.bio}
+                  rows="4"
+                  defaultValue={user?.bio}
                   className="mt-1 p-2 w-full rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#6464DD]"
                 />
               </div>
@@ -177,13 +181,18 @@ console.log(user)
                   Profile Image
                 </label>
                 <input
-                  type="file" name="image" placeholder="Upload your profile Image"
+                  type="file"
+                  name="image"
+                  placeholder="Upload your profile Image"
                   className="mt-1 p-2 w-full rounded-md border focus:outline-none focus:ring-2 focus:ring-[#6464DD] border-dashed"
                 />
               </div>
 
-              <button type="submit" className="mt-6 w-full cursor-pointer py-2 text-lg bg-[#6464DD] text-white rounded-md hover:bg-[#6464DD] transition duration-300">
-               {save ? "Saving Changes" : "Save Changes"}
+              <button
+                type="submit"
+                className="mt-6 w-full cursor-pointer py-2 text-lg bg-[#6464DD] text-white rounded-md hover:bg-[#6464DD] transition duration-300"
+              >
+                {save ? "Saving Changes" : "Save Changes"}
               </button>
             </form>
           )}

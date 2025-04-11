@@ -2,8 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
-import axios from "axios";
 import { FaAngleDown, FaAngleUp } from "react-icons/fa";
+import UseAxiosSecure from "@/app/hooks/useAxiosSecure";
 
 export default function SettingsPage() {
   const [errorMessage, setErrorMessage] = useState("");
@@ -11,16 +11,20 @@ export default function SettingsPage() {
   const [showPrivacy, setShowPrivacy] = useState(true);
   const [user, setUser] = useState(null);
 
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const userEmail = session?.user?.email;
 
+  const axiosSecure = UseAxiosSecure();
   useEffect(() => {
     const fetchUserData = async () => {
       if (userEmail) {
         try {
-          const response = await axios.post("http://localhost:5000/auth/find/Profile/", {
-            email: userEmail,
-          });
+          const response = await axiosSecure.post(
+            "http://localhost:5000/auth/find/Profile/",
+            {
+              email: userEmail,
+            }
+          );
           if (response.data) {
             setUser(response.data);
           } else {
@@ -45,7 +49,7 @@ export default function SettingsPage() {
     setErrorMessage("");
 
     try {
-      const response = await axios.patch("http://localhost:5000/api/update-settings", {
+      const response = await axiosSecure.patch("/api/update-settings", {
         email: userEmail,
         field,
         value,
@@ -53,7 +57,7 @@ export default function SettingsPage() {
 
       if (response?.data) {
         setSuccessMessage(response.data?.message);
-        setUser((prev) => ({ ...prev, [field]: value })); // আপডেট লোকাল ইউজার ডেটা
+        setUser((prev) => ({ ...prev, [field]: value }));
         setErrorMessage("");
       } else {
         setErrorMessage("Failed to update settings.");
@@ -65,10 +69,14 @@ export default function SettingsPage() {
       setSuccessMessage("");
     }
   };
+  useEffect(() => {
+    document.title = "Settings || Chatify";
+  }, []);
+
 
   return (
-    <div className="flex flex-col py-10 min-h-screen items-center bg-gray-100 px-4">
-      <h3 className="text-2xl font-semibold mb-6">Settings</h3>
+    <div className="flex flex-col py-10 min-h-screen items-center bg-[#E6EBF5] px-4">
+      <h3 className="text-xl font-semibold mb-6">Settings</h3>
 
       <div className="bg-white shadow-2xl rounded-lg w-full max-w-lg p-8">
         <div
@@ -83,7 +91,10 @@ export default function SettingsPage() {
           <div className="space-y-6">
             {/* Profile Photo Visibility */}
             <div className="flex flex-col">
-              <label htmlFor="profilePhotoVisibility" className="mb-1 font-medium">
+              <label
+                htmlFor="profilePhotoVisibility"
+                className="mb-1 font-medium"
+              >
                 Profile Photo
               </label>
               <select
@@ -100,17 +111,17 @@ export default function SettingsPage() {
 
             {/* Last Seen */}
             <div className="flex flex-col">
-              <label htmlFor="lastSeen" className="mb-1 font-medium">
-                Last Seen
+              <label htmlFor="OnlineStatus" className="mb-1 font-medium">
+                Online Status
               </label>
               <select
-                id="lastSeen"
+                id="OnlineStatus"
                 className="border border-gray-300 rounded px-3 py-2"
-                value={user?.lastSeen || ""}
-                onChange={(e) => handleChange(e, "lastSeen")}
+                value={user?.OnlineStatus}
+                onChange={(e) => handleChange(e, "OnlineStatus")}
               >
-                <option value="yes">Show</option>
-                <option value="no">Don't Show</option>
+                <option value="true">Show</option>
+                <option value="false">Don't Show</option>
               </select>
             </div>
 
@@ -129,14 +140,19 @@ export default function SettingsPage() {
                 <option value="private">Private</option>
               </select>
             </div>
+
             {/* Feedback Messages */}
-      {errorMessage && <p className="text-red-500 text-center mt-4">{errorMessage}</p>}
-      {successMessage && <p className="text-green-500 text-center mt-4">{successMessage}</p>}
+            {errorMessage && (
+              <p className="text-red-500 text-center mt-4">{errorMessage}</p>
+            )}
+            {successMessage && (
+              <p className="text-green-500 text-center mt-4">
+                {successMessage}
+              </p>
+            )}
           </div>
         )}
       </div>
-
-      
     </div>
   );
 }
