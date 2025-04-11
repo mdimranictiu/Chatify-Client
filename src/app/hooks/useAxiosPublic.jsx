@@ -1,6 +1,6 @@
 import axios from "axios";
 const axiosPublic = axios.create({
-    baseURL: 'http://localhost:5000/'
+    baseURL: 'https://chatify-server-1-1a8e.onrender.com/'
 })
 
 const UseAxiosPublic = () => {

@@ -61,7 +61,7 @@ export default function ChatPage() {
 
   // set socket
   useEffect(() => {
-    const newSocket = io("http://localhost:5000");
+    const newSocket = io("https://chatify-server-1-1a8e.onrender.com/");
     Setsocket(newSocket);
 
     newSocket.on("receiveMessage", (newMessage) => {

@@ -2,7 +2,7 @@ import axios from "axios";
 import { signOut, useSession } from "next-auth/react";
 
 const axiosSecure = axios.create({
-    baseURL: 'http://localhost:5000/'
+    baseURL: 'https://chatify-server-1-1a8e.onrender.com/'
 })
 
 const UseAxiosSecure = () => {

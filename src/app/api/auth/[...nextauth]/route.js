@@ -15,7 +15,7 @@ export const authOptions = {
 
         try {
           // Step 1: Authenticate user
-          const response = await axios.post("http://localhost:5000/api/auth/user", {
+          const response = await axios.post("https://chatify-server-1-1a8e.onrender.com/api/auth/user", {
             email,
             password,
           });
@@ -24,7 +24,7 @@ export const authOptions = {
 
           if (user) {
             // Step 2: Generate JWT
-            const jwtRes = await axios.post("http://localhost:5000/api/jwt", {
+            const jwtRes = await axios.post("https://chatify-server-1-1a8e.onrender.com/api/jwt", {
               email: user?.email,
             });
 

@@ -53,7 +53,7 @@ export default function DashboardLayout({ children }) {
   const handleLogOut = async () => {
     if (user) {
       try {
-        await axios.post('http://localhost:5000/api/auth/logOut', {
+        await axios.post('https://chatify-server-1-1a8e.onrender.com/api/auth/logOut', {
           email: userEmail,
         });
       } catch (error) {

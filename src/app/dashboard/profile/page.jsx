@@ -58,7 +58,7 @@ export default function ProfilePage() {
         formData.append("image", image);
       }
 
-      const res = await fetch("http://localhost:5000/auth/update/profile", {
+      const res = await fetch("https://chatify-server-1-1a8e.onrender.com/auth/update/profile", {
         method: "PATCH",
         body: formData,
       });

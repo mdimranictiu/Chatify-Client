@@ -20,7 +20,7 @@ export default function SettingsPage() {
       if (userEmail) {
         try {
           const response = await axiosSecure.post(
-            "http://localhost:5000/auth/find/Profile/",
+            "https://chatify-server-1-1a8e.onrender.com/auth/find/Profile/",
             {
               email: userEmail,
             }
