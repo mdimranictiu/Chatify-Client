@@ -37,7 +37,6 @@ export default function LoginPage() {
   if (user) {
     router.push("/dashboard/chat");
   }
-  document.title = "Chatify Home";
   return (
     <div className="flex flex-col justify-center min-h-screen items-center bg-gray-100">
       <h2 className="text-center  bg-gradient-to-r from-[#7971E3]  to-[#b7b4db] bg-clip-text text-transparent text-4xl py-5 font-bold">

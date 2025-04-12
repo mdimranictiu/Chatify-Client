@@ -13,9 +13,9 @@ export default function ProfilePage() {
   const [save, setSave] = useState(false);
   const [refetch, setRefetch] = useState(false);
   const axiosSecure = UseAxiosSecure();
-  useEffect(() => {
-    document.title = "Profile || Chatify";
-  }, []);
+  // useEffect(() => {
+  //   document.title = "Profile || Chatify";
+  // }, []);
   useEffect(() => {
     const fetchUser = async () => {
       if (userEmail) {
@@ -83,12 +83,12 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="flex flex-col py-10 min-h-screen items-center bg-[#E6EBF5]">
+    <div className="flex flex-col py-10 min-h-screen items-center bg-white">
       <div className="flex flex-col items-center gap-2">
         <h3 className="text-xl font-semibold">My Profile</h3>
       </div>
 
-      <div className="bg-white my-5 shadow-2xl flex flex-col items-center rounded-lg w-full max-w-[580px] p-10">
+      <div className="bg-white my-5 shadow-2xl flex flex-col items-center rounded-lg max-sm:w-[90%] max-sm:mx-auto w-full max-w-lg p-8">
         <div className="w-[150px] h-[150px] border-2 rounded-full bg-gray-300 overflow-hidden">
           <img
             src={user?.profilePicture}

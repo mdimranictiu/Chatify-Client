@@ -14,7 +14,7 @@ export default function ResetPasswordPage() {
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  document.title = "Reset Password || Chatify";
+  // document.title = "Reset Password || Chatify";
   const {
     register,
     handleSubmit,

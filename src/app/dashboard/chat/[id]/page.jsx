@@ -143,7 +143,7 @@ export default function ChatPage() {
   const handleBack = () => {
     router.push("/dashboard/chat");
   };
-  document.title = "Chat";
+  // document.title = "Chat";
   return (
     <div className="relative p-5  min-h-screen rounded-sm ">
       <div className="border-b-2 p-2  w-full  text-gray-400 mx-auto">

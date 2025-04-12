@@ -3,7 +3,7 @@ import axios from "axios";
 import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 export default function LoginPage() {
@@ -38,8 +38,6 @@ export default function LoginPage() {
   if (user) {
     router.push("/dashboard/chat");
   }
-  document.title = "login || Chatify";
-
   return (
     <div className="flex flex-col justify-center min-h-screen items-center bg-gray-100">
       <h2 className="text-center  bg-gradient-to-r from-[#7971E3]  to-[#b7b4db] bg-clip-text text-transparent text-4xl py-5 font-bold">

@@ -69,9 +69,9 @@ export default function SettingsPage() {
       setSuccessMessage("");
     }
   };
-  useEffect(() => {
-    document.title = "Settings || Chatify";
-  }, []);
+  // useEffect(() => {
+  //   document.title = "Settings || Chatify";
+  // }, []);
 
 
   return (

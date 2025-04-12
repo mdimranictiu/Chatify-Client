@@ -73,7 +73,7 @@ export default function DashboardLayout({ children }) {
       <aside className="w-64 max-md:hidden overflow-y-auto p-10 space-y-6 fixed inset-y-0 left-0 bg-[#7F6EEA] border-r border-gray-200">
       <div className="h-3/4 flex flex-col py-10 justify-around text-center">
           <nav className="space-y-4 flex flex-col">
-            <h2 className="text-3xl font-semibold text-white mb-6">Chatify</h2>
+            <Link href={'/dashboard/chat'}><h2 className="text-3xl font-semibold text-white mb-6">Chatify</h2></Link>
 
             <div className="space-y-4">
               <Link href="/dashboard/chat" className="block text-lg text-white hover:text-gray-700 transition duration-300">Chats</Link>
@@ -122,14 +122,14 @@ export default function DashboardLayout({ children }) {
 
       {/* Mobile Bottom Navbar */}
       <nav className="fixed bottom-0 left-0 w-full bg-[#7F6EEA] border-t border-gray-200 px-5 items-center py-2 md:hidden z-50">
-      <div className=" flex flex-row  items-center  justify-between text-center">
-            <h2 className="text-3xl max-sm:text-2xl font-semibold text-white ">Chatify</h2>
+      <div className=" flex flex-row  items-center  gap-1 justify-between text-center">
+      <Link href={'/dashboard/chat'}><h2 className="text-3xl max-sm:text-xl font-semibold text-white ">Chatify</h2></Link>
 
             <div className="flex flex-row gap-2">
-              <Link href="/dashboard/chat" className="block text-lg text-white hover:text-gray-700 transition duration-300">Chats</Link>
-              <Link href="/dashboard/contacts" className="block text-lg text-white hover:text-gray-700 transition duration-300">Contacts</Link>
-              <Link href="/dashboard/profile" className="block text-lg text-white hover:text-gray-700 transition duration-300">Profile</Link>
-              <Link href="/dashboard/settings" className="block text-lg text-white hover:text-gray-700 transition duration-300">Settings</Link>
+              <Link href="/dashboard/chat" className="block text-sm text-white hover:text-gray-700 transition duration-300">Chats</Link>
+              <Link href="/dashboard/contacts" className="block text-sm text-white hover:text-gray-700 transition duration-300">Contacts</Link>
+              <Link href="/dashboard/profile" className="block text-sm text-white hover:text-gray-700 transition duration-300">Profile</Link>
+              <Link href="/dashboard/settings" className="block text-sm text-white hover:text-gray-700 transition duration-300">Settings</Link>
             </div>
 
             <div ref={mobileDropdownRef} className=" relative">

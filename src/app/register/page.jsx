@@ -20,7 +20,7 @@ export default function RegisterPage() {
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const axiosPublic = UseAxiosPublic();
-  document.title = "Register || Chatify";
+  // document.title = "Register || Chatify";
   const onSubmit = async (data) => {
     try {
       // Send the registration data to the backend

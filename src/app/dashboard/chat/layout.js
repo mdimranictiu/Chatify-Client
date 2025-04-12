@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { IoIosSearch } from "react-icons/io";
 
-export default function chatLayout({ children }) {
+export default function ChatLayout({ children }) {
   const { data: session, status } = useSession();
   const [onlineUsers, setOnlineUsers] = useState();
   const [recentContacts, setrecentContacts] = useState();
@@ -57,7 +57,9 @@ export default function chatLayout({ children }) {
           { userId: user?._id }
         );
         if (response.data) {
-          setrecentContacts(response.data);
+          const filterData= response?.data.filter((d)=> d._id !==user?._id)
+          setrecentContacts(filterData);
+          console.log(filterData)
         }
       } catch (error) {
         console.log("Fetch error:", error);

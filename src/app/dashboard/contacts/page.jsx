@@ -14,9 +14,9 @@ export default function ContactsPage() {
   const [search, SetSearch] = useState("");
   const router = useRouter();
   const axiosSecure = UseAxiosSecure();
-  useEffect(() => {
-    document.title = "Contacts || Chatify";
-  }, []);
+  // useEffect(() => {
+  //   document.title = "Contacts || Chatify";
+  // }, []);
   useEffect(() => {
     const UserFecth = async () => {
       try {
@@ -64,7 +64,7 @@ export default function ContactsPage() {
   return (
     <div className="flex min-h-screen">
       {/* Sidebar */}
-      <aside className="w-[90%] mx-auto bg-[#E6EBF5]  text-black p-6 space-y-4">
+      <aside className="w-[90%] mx-auto bg-white  text-black p-6 space-y-4">
         <h2 className="text-xl text-center font-bold mb-4">Contacts</h2>
         <div>
           <div className="relative w-full">
