@@ -58,8 +58,8 @@ export default function ChatLayout({ children }) {
         );
         if (response.data) {
           const filterData= response?.data.filter((d)=> d._id !==user?._id)
-          setrecentContacts(filterData);
-          console.log(filterData)
+          setrecentContacts(response.data);
+          console.log(response?.data)
         }
       } catch (error) {
         console.log("Fetch error:", error);
