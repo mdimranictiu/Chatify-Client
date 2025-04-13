@@ -205,9 +205,10 @@ export default function ChatPage() {
               </div>
               <div className="chat-header">
                 <span className="max-sm:hidden">
-                  {user?._id === message?.senderId
-                    ? user?.name
-                    : receiver?.name}
+                {receiver?.profilePhotoVisibility !== "everyone" ? (
+  user?._id === message?.senderId ? user?.name : receiver?.name
+) : null}
+
                 </span>{" "}
                 <time className="text-xs opacity-50">
                   {ConvertLocalDate(message?.timestamp)}
