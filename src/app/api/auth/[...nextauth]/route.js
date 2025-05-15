@@ -1,7 +1,3 @@
-import axios from "axios";
-import NextAuth from "next-auth";
-import CredentialsProvider from "next-auth/providers/credentials";
-
 export const authOptions = {
   providers: [
     CredentialsProvider({
@@ -14,7 +10,7 @@ export const authOptions = {
         const { email, password } = credentials;
 
         try {
-          // Step 1: Authenticate user
+          // Authenticate user
           const response = await axios.post("https://chatify-server-1-1a8e.onrender.com/api/auth/user", {
             email,
             password,
@@ -23,14 +19,11 @@ export const authOptions = {
           const user = response?.data;
 
           if (user) {
-            // Step 2: Generate JWT
             const jwtRes = await axios.post("https://chatify-server-1-1a8e.onrender.com/api/jwt", {
               email: user?.email,
             });
 
             const token = jwtRes?.data?.token;
-
-            // Add token to user object (for session use)
             return { ...user, token };
           }
 
@@ -47,6 +40,12 @@ export const authOptions = {
   pages: {
     signIn: "/login",
   },
+
+  session: {
+    strategy: "jwt",
+    maxAge: 60 * 60, 
+  },
+
   callbacks: {
     async jwt({ token, user }) {
       if (user?.token) {
@@ -60,6 +59,3 @@ export const authOptions = {
     },
   },
 };
-
-const handler = NextAuth(authOptions);
-export { handler as GET, handler as POST };
